@@ -101,19 +101,39 @@ def localSearch(x, vOne, vTwo, perm):
                 for j in range(0,len(perm)-1):
                     pPrime = swapTwoValues(i,j,perm)
                     pPrimeCost = localMaxValue(vOne,vTwo,pPrime)
+                    #print(pPrimeCost)
                     if pPrimeCost < bestCost:
                         bestCost = pPrimeCost
                         mejora = True
                     perm = swapTwoValues(i,j,perm)
 
     elif x==2:
-        u = random.randint(1,len(perm))
-        v = random.randint(1,len(perm))
-        w = random.randint(1,len(perm))
-        swapThreeValues(u,v,w,perm)
+        mejora=True
+        while mejora:
+            mejora = False
+            for i in range(0,len(perm)):
+                for j in range(0,len(perm)-1):
+                    for k in range(0, len(perm)-2):
+                        pPrime = swapThreeValues(i,j,k,perm)
+                        pPrimeCost = localMaxValue(vOne,vTwo,pPrime)
+                        #print(pPrimeCost)
+                        if pPrimeCost < bestCost:
+                            bestCost = pPrimeCost
+                            mejora = True
+                        perm = swapThreeValues(i,j,k,perm)
 
     elif x==3:
-        shiftLeft(perm, 1)
+        mejora=True
+        while mejora:
+            mejora = False
+            for i in range(0,len(perm)):
+                pPrime = shiftLeft(perm,i)
+                pPrimeCost = localMaxValue(vOne,vTwo,pPrime)
+                #print(pPrimeCost)
+                if pPrimeCost < bestCost:
+                    bestCost = pPrimeCost
+                    mejora = True
+                perm = shiftLeft(perm,i)
     
     return bestCost
 #-----------------Here starts the main method-----------
@@ -125,15 +145,20 @@ randomPer = vals[2]
 
 s = localMaxValue(nodesOne,nodesTwo,randomPer)
 
-print(randomPer)
-
-#while flag < 100:
-#    k = 1
-#    while k < 4:
+#print(randomPer)
+flag = 1
+while flag < 2:
+    k = 1
+    while k < 4:
         #Pick one neighborhood random
-sOne = pickAtRandom(1,randomPer)
-sOneCost = localSearch(1,nodesOne,nodesTwo,sOne)
-print(sOneCost)
+        sOne = pickAtRandom(k,randomPer)
+        #print(sOne)
+        sOneCost = localSearch(k,nodesOne,nodesTwo,sOne)
 
-#u = random.randint(1,19)
-#v = random.randint(1,19)
+        if sOneCost < s:
+            s= sOneCost
+        else:
+            k+=1
+    flag+=1
+        
+print(s)
